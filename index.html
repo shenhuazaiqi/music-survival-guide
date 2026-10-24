@@ -1,0 +1,800 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>音药局 — 音乐生存指南</title>
+<meta name="description" content="把生活里难熬的时刻，变成一张可以循环服用的音乐处方。深夜加班、失眠、社恐通勤……每一种生存难关，都有一首歌接住你。">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%23FAF6EC'/%3E%3Ccircle cx='32' cy='32' r='24' fill='none' stroke='%23D4645C' stroke-width='3'/%3E%3Ctext x='32' y='42' font-size='28' text-anchor='middle' fill='%23D4645C'%3E%E2%99%AA%3C/text%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Zen+Maru+Gothic:wght@400;500;700&family=Noto+Serif+SC:wght@600;700;900&display=swap" rel="stylesheet">
+<style>
+:root{
+  --paper:#F7F2E7;
+  --paper-2:#FDFBF3;
+  --ink:#4C4438;
+  --ink-soft:#8A7F6F;
+  --line:#E4DCCB;
+  --matcha:#7FA07C;
+  --matcha-deep:#54775B;
+  --matcha-pale:#E7EEE3;
+  --sakura:#EFC5C6;
+  --sakura-deep:#C97B7E;
+  --sakura-pale:#F9ECEC;
+  --sky:#A9C9DE;
+  --sky-pale:#EAF2F7;
+  --hanko:#C9564E;
+  --amber:#E4B95B;
+  --radius:18px;
+  --serif:'Noto Serif SC','Songti SC','STSong',serif;
+  --sans:-apple-system,BlinkMacSystemFont,'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif;
+  --jp:'Zen Maru Gothic',var(--sans);
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  font-family:var(--sans);
+  color:var(--ink);
+  background:var(--paper);
+  background-image:
+    radial-gradient(rgba(127,160,124,.05) 1px, transparent 1.4px),
+    radial-gradient(rgba(201,86,78,.035) 1px, transparent 1.4px);
+  background-size:26px 26px,38px 38px;
+  background-position:0 0,13px 19px;
+  min-height:100vh;
+  -webkit-font-smoothing:antialiased;
+}
+/* ── decorative washi tapes on desktop ── */
+.washi{position:fixed;z-index:0;pointer-events:none;opacity:.5;display:none}
+@media(min-width:640px){.washi{display:block}}
+.washi-1{top:64px;left:calc(50% - 380px);transform:rotate(-14deg);width:96px;height:26px;background:repeating-linear-gradient(45deg,var(--sakura),var(--sakura) 6px,#F3D7D8 6px,#F3D7D8 12px);border-radius:2px}
+.washi-2{top:340px;right:calc(50% - 392px);transform:rotate(10deg);width:110px;height:24px;background:repeating-linear-gradient(45deg,var(--sky),var(--sky) 6px,#C8DEEC 6px,#C8DEEC 12px);border-radius:2px}
+.washi-3{bottom:120px;left:calc(50% - 400px);transform:rotate(-6deg);width:88px;height:26px;background:repeating-linear-gradient(45deg,var(--matcha),var(--matcha) 6px,#C9DCc5 6px,#C9DCC5 12px);border-radius:2px}
+
+/* ── app column ── */
+.app{
+  position:relative;z-index:1;
+  max-width:430px;margin:0 auto;
+  background:var(--paper-2);
+  min-height:100vh;
+  box-shadow:0 0 0 1px var(--line),0 8px 40px rgba(76,68,56,.08);
+}
+@media(min-width:640px){
+  .app{margin:28px auto;min-height:calc(100vh - 56px);border-radius:26px;overflow:hidden}
+}
+.view{display:none;padding:20px 20px 108px;animation:fadeUp .45s ease both}
+.view.active{display:block}
+@keyframes fadeUp{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+
+/* ── header ── */
+header{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:20px 20px 4px;
+}
+.brand{display:flex;align-items:center;gap:10px}
+.brand-stamp{
+  width:44px;height:44px;border:2px solid var(--hanko);border-radius:12px;
+  display:flex;align-items:center;justify-content:center;
+  color:var(--hanko);font-size:22px;font-family:var(--serif);font-weight:900;
+  transform:rotate(-6deg);background:#fff;
+  box-shadow:2px 2px 0 rgba(201,86,78,.15);
+}
+.brand h1{font-family:var(--serif);font-size:22px;font-weight:900;letter-spacing:2px}
+.brand small{display:block;font-family:var(--jp);font-size:10px;color:var(--ink-soft);letter-spacing:3px;font-weight:500}
+.header-note{
+  font-family:var(--jp);font-size:10px;color:var(--matcha-deep);
+  border:1px dashed var(--matcha);border-radius:20px;padding:5px 10px;background:var(--matcha-pale);
+}
+
+/* ── hero : 今日生存指数 ── */
+.hero{padding:14px 20px 6px}
+.hero-label{font-family:var(--jp);font-size:11px;letter-spacing:2px;color:var(--ink-soft);margin-bottom:8px;display:flex;align-items:center;gap:8px}
+.hero-label::before,.hero-label::after{content:"";height:1px;background:var(--line);flex:1}
+.today-card{
+  background:linear-gradient(150deg,#fff 0%,var(--sakura-pale) 130%);
+  border:1px solid var(--line);border-radius:22px;
+  padding:20px 20px 18px;position:relative;overflow:hidden;
+  box-shadow:0 10px 28px rgba(201,123,126,.10);
+}
+.today-card .date-line{display:flex;justify-content:space-between;align-items:baseline}
+.today-card .date{font-family:var(--serif);font-weight:700;font-size:15px}
+.today-card .greeting{font-family:var(--jp);font-size:11px;color:var(--ink-soft)}
+.mood-q{margin:14px 0 12px;font-size:14px}
+.mood-q b{font-family:var(--serif)}
+.mood-row{display:flex;gap:8px}
+.mood-btn{
+  flex:1;border:1.5px solid var(--line);background:#fff;border-radius:14px;
+  padding:10px 4px 8px;cursor:pointer;text-align:center;
+  transition:all .2s ease;font-family:inherit;
+}
+.mood-btn .emoji{font-size:22px;display:block}
+.mood-btn .t{font-size:11px;color:var(--ink-soft);margin-top:3px;display:block}
+.mood-btn:hover{transform:translateY(-2px);border-color:var(--matcha)}
+.mood-btn.selected{border-color:var(--matcha-deep);background:var(--matcha-pale)}
+.mood-btn.selected .t{color:var(--matcha-deep);font-weight:600}
+.today-result{display:none;margin-top:14px;animation:fadeUp .4s ease both}
+.today-result.show{display:block}
+.diff-row{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px}
+.diff-label{font-size:12px;color:var(--ink-soft)}
+.diff-label b{font-family:var(--serif);font-size:15px;color:var(--ink)}
+.diff-level{font-family:var(--serif);font-weight:700;font-size:14px}
+.diff-bar{display:flex;gap:5px;margin:0 0 12px}
+.diff-bar span{flex:1;height:8px;border-radius:5px;background:var(--line)}
+.diff-bar span.on{background:linear-gradient(90deg,var(--amber),var(--sakura-deep))}
+.today-result .rx-link{
+  width:100%;border:none;cursor:pointer;
+  background:var(--matcha-deep);color:#fff;
+  font-size:13px;font-weight:600;padding:11px;border-radius:12px;
+  font-family:inherit;letter-spacing:1px;
+  transition:transform .15s ease;
+}
+.today-result .rx-link:hover{transform:translateY(-1px)}
+.today-result .rx-tip{font-family:var(--jp);font-size:10.5px;color:var(--ink-soft);text-align:center;margin-top:8px}
+
+/* ── section ── */
+.section-head{display:flex;align-items:baseline;justify-content:space-between;padding:26px 0 12px}
+.section-head h2{font-family:var(--serif);font-size:18px;font-weight:900;letter-spacing:1px}
+.section-head .jp{font-family:var(--jp);font-size:10px;color:var(--ink-soft);letter-spacing:2px}
+.symptom-list{display:flex;flex-direction:column;gap:14px}
+.symptom-card{
+  background:#fff;border:1px solid var(--line);border-radius:var(--radius);
+  padding:16px 16px 14px;position:relative;
+  transition:transform .2s ease,box-shadow .2s ease;
+  animation:fadeUp .5s ease both;
+}
+.symptom-card:hover{transform:translateY(-2px);box-shadow:0 10px 24px rgba(76,68,56,.08)}
+.symptom-card::before{
+  content:"";position:absolute;top:-8px;left:50%;transform:translateX(-50%) rotate(-2deg);
+  width:74px;height:16px;border-radius:2px;opacity:.75;
+  background:repeating-linear-gradient(45deg,var(--tape,var(--sakura)),var(--tape,var(--sakura)) 5px,rgba(255,255,255,.55) 5px,rgba(255,255,255,.55) 10px);
+}
+.symptom-top{display:flex;align-items:center;justify-content:space-between;gap:8px}
+.symptom-name{display:flex;align-items:baseline;gap:8px}
+.symptom-name h3{font-family:var(--serif);font-size:16.5px;font-weight:700}
+.symptom-name .kana{font-family:var(--jp);font-size:10px;color:var(--ink-soft);letter-spacing:1px}
+.stars{font-size:11px;letter-spacing:1.5px;color:var(--sakura-deep);white-space:nowrap}
+.stars .off{color:#E2DAC9}
+.symptom-desc{font-size:12.5px;color:var(--ink-soft);line-height:1.7;margin:8px 0 12px}
+.symptom-foot{display:flex;align-items:center;justify-content:space-between}
+.rx-count{font-family:var(--jp);font-size:10px;color:var(--ink-soft)}
+.btn-rx{
+  border:none;cursor:pointer;font-family:inherit;
+  background:var(--matcha-deep);color:#fff;
+  font-size:12.5px;font-weight:600;letter-spacing:1px;
+  padding:9px 18px;border-radius:999px;
+  transition:transform .15s ease,box-shadow .15s ease;
+  display:inline-flex;align-items:center;gap:6px;
+}
+.btn-rx:hover{transform:translateY(-1px);box-shadow:0 6px 14px rgba(84,119,91,.3)}
+.btn-rx.owned{background:#fff;color:var(--matcha-deep);border:1.5px solid var(--matcha-deep)}
+
+/* ── 药匣 ── */
+.box-stats{
+  display:flex;gap:10px;margin-bottom:16px;
+}
+.stat-card{
+  flex:1;background:#fff;border:1px solid var(--line);border-radius:var(--radius);
+  padding:14px;text-align:center;
+}
+.stat-card b{display:block;font-family:var(--serif);font-size:24px;font-weight:900;color:var(--matcha-deep)}
+.stat-card span{font-size:11px;color:var(--ink-soft)}
+.box-list{display:flex;flex-direction:column;gap:10px}
+.box-item{
+  background:#fff;border:1px solid var(--line);border-radius:var(--radius);
+  padding:13px 15px;display:flex;align-items:center;gap:12px;cursor:pointer;
+  transition:transform .15s ease;animation:fadeUp .4s ease both;
+}
+.box-item:hover{transform:translateX(3px)}
+.box-item .rx-ico{
+  width:36px;height:36px;border-radius:10px;flex:none;
+  background:var(--sakura-pale);color:var(--hanko);
+  display:flex;align-items:center;justify-content:center;
+  font-family:var(--serif);font-weight:900;font-size:13px;
+  border:1px solid #F0DAD9;
+}
+.box-item .bi-main{flex:1;min-width:0}
+.box-item h4{font-family:var(--serif);font-size:14px;font-weight:700}
+.box-item p{font-size:10.5px;color:var(--ink-soft);margin-top:2px;font-family:var(--jp)}
+.box-item .arrow{color:#C9BFAD;font-size:14px}
+.box-empty{text-align:center;padding:52px 20px;color:var(--ink-soft)}
+.box-empty .art{font-size:44px;margin-bottom:14px;letter-spacing:6px}
+.box-empty p{font-size:13px;line-height:1.8}
+
+/* ── about ── */
+.about-paper{
+  background:#fff;border:1px solid var(--line);border-radius:var(--radius);
+  padding:24px 20px;position:relative;
+}
+.about-paper h3{font-family:var(--serif);font-size:16px;margin-bottom:12px}
+.about-paper p{font-size:13px;line-height:2;color:#6B6154;margin-bottom:10px}
+.about-sign{
+  margin-top:18px;display:flex;justify-content:flex-end;align-items:center;gap:12px;
+}
+.about-sign .who{font-family:var(--jp);font-size:11px;color:var(--ink-soft);text-align:right;line-height:1.8}
+.hanko-seal{
+  width:58px;height:58px;border:2.5px solid var(--hanko);border-radius:8px;
+  color:var(--hanko);display:flex;align-items:center;justify-content:center;
+  font-family:var(--serif);font-weight:900;font-size:15px;letter-spacing:1px;
+  transform:rotate(-8deg);opacity:.85;line-height:1.3;text-align:center;
+}
+.about-rules{margin-top:16px;border-top:1px dashed var(--line);padding-top:14px}
+.about-rules li{
+  list-style:none;font-size:12px;color:var(--ink-soft);line-height:2;
+  display:flex;gap:8px;
+}
+.about-rules li::before{content:"·";color:var(--matcha-deep);font-weight:900}
+
+/* ── modal ── */
+.overlay{
+  position:fixed;inset:0;z-index:50;display:none;
+  background:rgba(60,52,40,.45);backdrop-filter:blur(3px);
+  align-items:flex-end;justify-content:center;
+}
+.overlay.open{display:flex}
+.rx-sheet{
+  width:min(430px,100%);max-height:88vh;overflow-y:auto;
+  background:#FFFDF6;border-radius:24px 24px 0 0;
+  padding:26px 24px 30px;position:relative;
+  animation:sheetUp .38s cubic-bezier(.32,.72,.33,1) both;
+}
+@media(min-width:640px){
+  .overlay{align-items:center}
+  .rx-sheet{border-radius:24px;animation:popIn .32s cubic-bezier(.3,1.2,.4,1) both}
+}
+@keyframes sheetUp{from{transform:translateY(60px);opacity:.4}to{transform:none;opacity:1}}
+@keyframes popIn{from{transform:scale(.92) translateY(20px);opacity:0}to{transform:none;opacity:1}}
+.rx-close{
+  position:absolute;top:14px;right:16px;width:30px;height:30px;border-radius:50%;
+  border:1px solid var(--line);background:#fff;color:var(--ink-soft);
+  font-size:14px;cursor:pointer;z-index:2;
+}
+.rx-head{display:flex;justify-content:space-between;align-items:flex-start;border-bottom:2.5px double #D8CDB6;padding-bottom:12px}
+.rx-head .l1{font-family:var(--serif);font-size:17px;font-weight:900;letter-spacing:4px}
+.rx-head .l2{font-family:var(--jp);font-size:9.5px;letter-spacing:2.5px;color:var(--ink-soft);margin-top:3px}
+.rx-no{font-family:var(--jp);font-size:10px;color:var(--ink-soft);text-align:right;line-height:1.7}
+.rx-title{margin:16px 0 4px;text-align:center}
+.rx-title h3{font-family:var(--serif);font-size:21px;font-weight:900;letter-spacing:2px}
+.rx-title .kana{font-family:var(--jp);font-size:11px;color:var(--sakura-deep);letter-spacing:2px;margin-top:4px;display:block}
+.rx-table{margin-top:16px;border-top:1.5px solid #D8CDB6}
+.rx-row{display:flex;border-bottom:1px dashed #E3D9C4;padding:11px 0}
+.rx-row .th{
+  width:76px;flex:none;font-family:var(--serif);font-weight:700;font-size:12.5px;color:var(--matcha-deep);
+  display:flex;align-items:flex-start;gap:4px;padding-top:2px;
+}
+.rx-row .th i{font-style:normal;font-family:var(--jp);font-size:8.5px;color:var(--ink-soft);display:block;letter-spacing:1px}
+.rx-row .td{flex:1;font-size:13px;line-height:1.8}
+.rx-row .td .symptom{color:#6B6154;font-size:12.5px}
+.song{display:flex;gap:10px;padding:7px 0;align-items:baseline}
+.song .no{
+  flex:none;width:20px;height:20px;border-radius:50%;background:var(--matcha-pale);
+  color:var(--matcha-deep);font-size:10px;font-weight:700;
+  display:flex;align-items:center;justify-content:center;align-self:center;
+  font-family:var(--jp);
+}
+.song .st{font-size:13.5px;font-weight:600}
+.song .sa{font-size:11px;color:var(--ink-soft);margin-left:6px}
+.song .se{display:block;font-size:11px;color:var(--sakura-deep);font-family:var(--jp);margin-top:2px}
+.rx-actions{display:flex;gap:10px;margin-top:20px}
+.btn-collect{
+  flex:1.4;border:none;cursor:pointer;font-family:inherit;
+  background:var(--hanko);color:#fff;font-size:13.5px;font-weight:700;letter-spacing:2px;
+  padding:13px;border-radius:13px;transition:transform .15s ease;
+}
+.btn-collect:hover{transform:translateY(-1px)}
+.btn-collect.done{background:var(--matcha-pale);color:var(--matcha-deep);border:1.5px solid var(--matcha-deep);letter-spacing:1px}
+.btn-listen{
+  flex:1;border:1.5px solid var(--sakura-deep);background:var(--sakura-pale);color:var(--sakura-deep);
+  cursor:pointer;font-family:inherit;font-size:12.5px;font-weight:700;letter-spacing:1px;
+  padding:13px 6px;border-radius:13px;transition:all .15s ease;
+  display:flex;align-items:center;justify-content:center;gap:5px;
+}
+.btn-listen:hover{transform:translateY(-1px)}
+.btn-listen.playing{background:var(--sakura-deep);color:#fff}
+.eq{display:none;gap:2.5px;align-items:flex-end;height:12px}
+.btn-listen.playing .eq{display:flex}
+.eq i{width:2.5px;background:currentColor;border-radius:2px;animation:eq 0.9s ease-in-out infinite}
+.eq i:nth-child(1){height:6px;animation-delay:0s}
+.eq i:nth-child(2){height:11px;animation-delay:.2s}
+.eq i:nth-child(3){height:8px;animation-delay:.4s}
+@keyframes eq{0%,100%{transform:scaleY(.5)}50%{transform:scaleY(1)}}
+.rx-stamp{
+  position:absolute;right:22px;top:86px;
+  width:72px;height:72px;border:3px solid var(--hanko);border-radius:10px;
+  color:var(--hanko);display:flex;align-items:center;justify-content:center;
+  font-family:var(--serif);font-weight:900;font-size:17px;letter-spacing:2px;
+  transform:rotate(9deg);opacity:0;pointer-events:none;line-height:1.25;text-align:center;
+}
+.rx-stamp.show{animation:stampIn .45s cubic-bezier(.2,1.6,.4,1) .15s both}
+@keyframes stampIn{
+  0%{opacity:0;transform:rotate(9deg) scale(2.2)}
+  60%{opacity:.92;transform:rotate(9deg) scale(.94)}
+  100%{opacity:.82;transform:rotate(9deg) scale(1)}
+}
+.rx-foot{margin-top:18px;text-align:center;font-family:var(--jp);font-size:10px;color:var(--ink-soft);letter-spacing:2px}
+
+/* ── bottom nav ── */
+nav{
+  position:fixed;bottom:0;left:50%;transform:translateX(-50%);
+  width:min(430px,100%);z-index:40;
+  background:rgba(255,253,246,.92);backdrop-filter:blur(10px);
+  border-top:1px solid var(--line);
+  display:flex;padding:8px 10px calc(10px + env(safe-area-inset-bottom));
+}
+@media(min-width:640px){nav{bottom:28px;border-radius:0 0 26px 26px;border:1px solid var(--line);border-top:1px solid var(--line)}}
+.nav-btn{
+  flex:1;border:none;background:none;cursor:pointer;font-family:inherit;
+  display:flex;flex-direction:column;align-items:center;gap:3px;
+  color:var(--ink-soft);font-size:10.5px;padding:5px 0;border-radius:12px;
+  transition:color .2s ease;
+}
+.nav-btn svg{width:21px;height:21px;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.nav-btn.active{color:var(--matcha-deep);font-weight:700}
+.nav-btn .badge{
+  position:absolute;top:2px;right:calc(50% - 20px);
+  min-width:16px;height:16px;border-radius:9px;background:var(--hanko);color:#fff;
+  font-size:9px;font-weight:700;display:none;align-items:center;justify-content:center;padding:0 4px;
+}
+.nav-btn{position:relative}
+.nav-btn .badge.show{display:flex}
+
+/* ── toast ── */
+.toast{
+  position:fixed;left:50%;bottom:96px;transform:translateX(-50%) translateY(16px);
+  background:rgba(76,68,56,.92);color:#FFFDF6;font-size:12.5px;letter-spacing:1px;
+  padding:10px 20px;border-radius:999px;z-index:60;opacity:0;pointer-events:none;
+  transition:all .3s ease;white-space:nowrap;
+}
+.toast.show{opacity:1;transform:translateX(-50%)}
+
+footer{padding:26px 20px 14px;text-align:center;font-family:var(--jp);font-size:10px;color:#B4A98F;letter-spacing:2px}
+</style>
+</head>
+<body>
+
+<div class="washi washi-1"></div>
+<div class="washi washi-2"></div>
+<div class="washi washi-3"></div>
+
+<div class="app">
+  <header>
+    <div class="brand">
+      <div class="brand-stamp">♪</div>
+      <h1>音药局<small>MUSIC PHARMACY · 音楽で生き延びる</small></h1>
+    </div>
+    <div class="header-note">非营利 · 只收治情绪</div>
+  </header>
+
+  <!-- ═══════════ 今日处方 ═══════════ -->
+  <section class="view active" id="view-home">
+    <div class="hero">
+      <div class="hero-label">TODAY'S SURVIVAL INDEX</div>
+      <div class="today-card">
+        <div class="date-line">
+          <div class="date" id="today-date">—</div>
+          <div class="greeting">ようこそ、お元気ですか</div>
+        </div>
+        <p class="mood-q">今天的世界，对你来说<b>有多难？</b></p>
+        <div class="mood-row" id="mood-row">
+          <button class="mood-btn" data-mood="1"><span class="emoji">😊</span><span class="t">元气满满</span></button>
+          <button class="mood-btn" data-mood="3"><span class="emoji">😑</span><span class="t">有点疲惫</span></button>
+          <button class="mood-btn" data-mood="5"><span class="emoji">🥲</span><span class="t">快撑不住</span></button>
+        </div>
+        <div class="today-result" id="today-result">
+          <div class="diff-row">
+            <span class="diff-label">今日生存难度</span>
+            <span class="diff-level" id="diff-level">—</span>
+          </div>
+          <div class="diff-bar" id="diff-bar"><span></span><span></span><span></span><span></span><span></span></div>
+          <button class="rx-link" id="today-rx-btn">领取今日处方 →</button>
+          <p class="rx-tip" id="today-rx-tip"></p>
+        </div>
+      </div>
+    </div>
+
+    <div class="section-head">
+      <h2>生存场景处方笺</h2>
+      <span class="jp">SURVIVAL PRESCRIPTIONS</span>
+    </div>
+    <div class="symptom-list" id="symptom-list"></div>
+
+    <footer>© 2026 音药局 · 祝你今天也能顺利生存</footer>
+  </section>
+
+  <!-- ═══════════ 我的药匣 ═══════════ -->
+  <section class="view" id="view-box">
+    <div class="section-head" style="padding-top:14px">
+      <h2>我的药匣</h2>
+      <span class="jp">MY MEDICINE BOX</span>
+    </div>
+    <div class="box-stats">
+      <div class="stat-card"><b id="stat-count">0</b><span>已领取处方</span></div>
+      <div class="stat-card"><b id="stat-streak">1</b><span>连续服药天数</span></div>
+    </div>
+    <div class="box-list" id="box-list"></div>
+    <div class="box-empty" id="box-empty">
+      <div class="art">🎵 💊</div>
+      <p>药匣空空如也<br>快去领取第一张音乐处方吧</p>
+    </div>
+  </section>
+
+  <!-- ═══════════ 局长的话 ═══════════ -->
+  <section class="view" id="view-about">
+    <div class="section-head" style="padding-top:14px">
+      <h2>局长的话</h2>
+      <span class="jp">FROM THE DIRECTOR</span>
+    </div>
+    <div class="about-paper">
+      <h3>为什么要开一家「音药局」？</h3>
+      <p>周末的晚上，总会突然被一种情绪击中——想到明天是周一，胃就开始隐隐作痛。</p>
+      <p>有一天我一边单曲循环《ロビンソン》，一边想：如果情绪是病，那音乐就是药。那是不是应该有一家药房，专门给生活里那些难熬的时刻开处方？</p>
+      <p>于是有了「音药局」。它不治病，只在每个撑不住的时刻，递给你一张可以循环服用的处方笺。</p>
+      <div class="about-sign">
+        <div class="who">局长 · 郭大侠<br>于某个撑不住的晚上</div>
+        <div class="hanko-seal">音药<br>局印</div>
+      </div>
+      <ul class="about-rules">
+        <li>本局不营利，只收治情绪，挂号费为一首好听的时间</li>
+        <li>处方以日系音乐为主，疗效因人而异，过许人人不同</li>
+        <li>副作用轻微，多为流泪、单曲循环与突然想恋爱</li>
+        <li>病情加重请及时就医，音乐不是替代品，是同行者</li>
+      </ul>
+    </div>
+    <footer>© 2026 音药局 MUSIC PHARMACY</footer>
+  </section>
+
+  <nav>
+    <button class="nav-btn active" data-view="home">
+      <svg viewBox="0 0 24 24"><path d="M3 10.5 12 3l9 7.5"/><path d="M5 9.5V21h14V9.5"/></svg>
+      今日处方
+    </button>
+    <button class="nav-btn" data-view="box">
+      <svg viewBox="0 0 24 24"><rect x="3" y="8" width="18" height="13" rx="2"/><path d="M9 8V5a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v3"/><path d="M3 13h18"/></svg>
+      我的药匣
+      <span class="badge" id="nav-badge">0</span>
+    </button>
+    <button class="nav-btn" data-view="about">
+      <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 11v5"/><circle cx="12" cy="8" r=".5"/></svg>
+      局长的话
+    </button>
+  </nav>
+</div>
+
+<!-- ═══════════ 处方笺弹窗 ═══════════ -->
+<div class="overlay" id="overlay">
+  <div class="rx-sheet" id="rx-sheet">
+    <button class="rx-close" id="rx-close">✕</button>
+    <div class="rx-head">
+      <div>
+        <div class="l1">音 药 局</div>
+        <div class="l2">MUSIC PRESCRIPTION</div>
+      </div>
+      <div class="rx-no" id="rx-no">RX-No.000</div>
+    </div>
+    <div class="rx-stamp" id="rx-stamp">已<br>领</div>
+    <div class="rx-title">
+      <h3 id="rx-title">—</h3>
+      <span class="kana" id="rx-kana">—</span>
+    </div>
+    <div class="rx-table">
+      <div class="rx-row"><div class="th">症状<i>SHOJO</i></div><div class="td"><span class="symptom" id="rx-symptom">—</span></div></div>
+      <div class="rx-row"><div class="th">处方<i>CHUHOU</i></div><div class="td" id="rx-songs"></div></div>
+      <div class="rx-row"><div class="th">用法<i>YOHO</i></div><div class="td" id="rx-usage">—</div></div>
+      <div class="rx-row"><div class="th">副作用<i>FUKUSAYO</i></div><div class="td" id="rx-side">—</div></div>
+    </div>
+    <div class="rx-actions">
+      <button class="btn-collect" id="btn-collect">放入药匣</button>
+      <button class="btn-listen" id="btn-listen">
+        <span id="listen-label">♪ 疗效试听</span>
+        <span class="eq"><i></i><i></i><i></i></span>
+      </button>
+    </div>
+    <div class="rx-foot">本笺由音药局开出 · 请遵「耳」嘱服用</div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+/* ═══════════ 处方数据 ═══════════ */
+const RX = [
+  {id:'monday', no:'001', name:'周一综合征', kana:'げつようびショック', stars:3, base:261.63,
+   desc:'闹钟按掉第八次，灵魂还留在周日的傍晚。地铁上每个人都是灰色的。',
+   usage:'早安闹钟响起时立即服用，搭配一顿热乎的白米饭效果更佳。',
+   side:'会突然很想请假去野餐。',
+   songs:[
+     {t:'風になる', a:'つじあやの', e:'把窗帘吹开的那种风'},
+     {t:'3月9日', a:'レミオロメン', e:'给周一一点毕业旅行的勇气'},
+     {t:'マルシェ', a:'あいみょん', e:'像去早市挑了一把新蔬菜'}]},
+  {id:'overtime', no:'002', name:'深夜加班', kana:'しんやざんぎょう', stars:4, base:293.66,
+   desc:'凌晨一点，写字楼只剩你的工位还亮着灯，咖啡已经凉了第二杯。',
+   usage:'深夜循环服用，同时把屏幕亮度调低一半，记得喝温水。',
+   side:'可能想给很久没联系的人发一条消息。',
+   songs:[
+     {t:'糸', a:'中島みゆき', e:'提醒你人和人是相连的'},
+     {t:'夜空ノムコウ', a:'SMAP', e:'夜空的另一边，有人在等你回家'},
+     {t:'アイラブユー', a:'back number', e:'温柔的夜曲，替你说出没说的话'}]},
+  {id:'insomnia', no:'003', name:'失眠夜', kana:'ふみんや', stars:5, base:220.00,
+   desc:'数了一百只羊，羊都睡了，你还没睡。天花板上全是明天的烦恼。',
+   usage:'睡前三十分钟开始服用，音量调至若隐若现，手机放到够不着的地方。',
+   side:'第二天闹钟可能叫不醒你。',
+   songs:[
+     {t:'奏（かなで）', a:'スキマスイッチ', e:'像有人轻轻拍着你的背'},
+     {t:'楓', a:'スピッツ', e:'一片叶子慢慢落下的速度'},
+     {t:'やさしさに包まれたなら', a:'荒井由実', e:'被温柔包裹住的睡前仪式'}]},
+  {id:'commute', no:'004', name:'社恐通勤', kana:'しゃきょうつうきん', stars:3, base:329.63,
+   desc:'满员电车里，连呼吸都要排队。每一个靠近的肩膀都让灵魂紧绷。',
+   usage:'上车前戴好耳机，全程循环，眼神交给窗外。',
+   side:'可能坐过站。',
+   songs:[
+     {t:'ロビンソン', a:'スピッツ', e:'在人群里拥有一艘自己的小船'},
+     {t:'チェリー', a:'スピッツ', e:'把拥挤的通勤变成青春片头曲'},
+     {t:'小さな恋のうた', a:'MONGOL800', e:'用大合唱盖过整个车厢的安静'}]},
+  {id:'rainy', no:'005', name:'雨天忧郁', kana:'うてんゆううつ', stars:2, base:349.23,
+   desc:'窗外的雨下个不停，心情也跟着发了霉，连袜子都是潮的。',
+   usage:'靠窗位置服用，观察雨滴沿着玻璃下落的速度，慢慢喝一杯热茶。',
+   side:'会想念没有带伞的那一天。',
+   songs:[
+     {t:'打上花火', a:'DAOKO × 米津玄師', e:'雨夜里升起一朵不灭的烟花'},
+     {t:'ハルノヒ', a:'あいみょん', e:'相信雨停之后就是春天'},
+     {t:'I LOVE YOU', a:'尾崎豊', e:'把潮湿的心事唱给雨听'}]},
+  {id:'heartbreak', no:'006', name:'分手疗伤', kana:'ぶんしゅりょうしょう', stars:5, base:246.94,
+   desc:'删掉了合照，拉黑了动态，却删不掉单曲循环里的那首歌。',
+   usage:'想哭的时候就听，眼泪是排毒，不必硬撑。一个疗程为二十八天。',
+   side:'痊愈之后，这些歌会突然变得很好听。',
+   songs:[
+     {t:'Lemon', a:'米津玄師', e:'把说不出口的怀念都交给旋律'},
+     {t:'カタオモイ', a:'Aimer', e:'爱过就不算输'},
+     {t:'ただ君に晴れ', a:'ヨルシカ', e:'祝你那边，永远晴天'}]},
+  {id:'meeting', no:'007', name:'会议恐惧症', kana:'かいぎきょうふしょう', stars:3, base:392.00,
+   desc:'会议开到第三个小时，灵魂已经神游到冲绳的海边。',
+   usage:'会议中偷偷单曲循环，表情管理保持「认真点头」，假装在记笔记。',
+   side:'可能被点名提问。',
+   songs:[
+     {t:'海の声', a:'BEGIN', e:'三味线一响，会议室变成海边'},
+     {t:'島人ぬ宝', a:'BEGIN', e:'冲绳的风穿过格子间'},
+     {t:'空も飛べるはず', a:'スピッツ', e:'散会就能飞起来的感觉'}]},
+  {id:'friday', no:'008', name:'周五亢奋症', kana:'きんようびこうふんしょう', stars:1, base:440.00,
+   desc:'下午四点，打工魂已经开始庆祝自由，键盘敲出了鼓点。',
+   usage:'下班瞬间服用，音量越大越有效，建议配合一路小跑。',
+   side:'周一还会再犯，属正常现象。',
+   songs:[
+     {t:'RPG', a:'SEKAI NO OWARI', e:'周末副本，正式开启'},
+     {t:'パプリカ', a:'Foorin', e:'跳起来的周五傍晚'},
+     {t:'風になる', a:'つじあやの', e:'跑起来的瞬间就变成风'}]},
+  {id:'miss', no:'009', name:'想念某人', kana:'おもいでちょう', stars:4, base:261.63,
+   desc:'城市那么大，便利店里什么都有，却再也没有那个人的味道。',
+   usage:'深夜限量服用，允许自己想念十分钟，时间一到就去睡觉。',
+   side:'可能会写一条永远不发送的消息。',
+   songs:[
+     {t:'366日', a:'HY', e:'每天都想一遍的固执'},
+     {t:'トリセツ', a:'西野カナ', e:'你的使用说明书我还留着'},
+     {t:'未来へ', a:'Kiroro', e:'把想念变成往前走的力气'}]},
+  {id:'sunday', no:'010', name:'周日傍晚恐慌', kana:'にちようゆうぐれパニック', stars:4, base:440.00,
+   desc:'周日傍晚六点，快乐余额已不足，周一的影子已经拉到脚边。',
+   usage:'傍晚出门散步时服用，一路走到天黑，买一支出局的冰淇淋。',
+   side:'会把周一的闹钟提前十分钟。',
+   songs:[
+     {t:'ひまわりの約束', a:'秦基博', e:'和难过的事做一个约定'},
+     {t:'卒業写真', a:'荒井由実', e:'傍晚的光线刚刚好'},
+     {t:'ルージュの伝言', a:'荒井由実', e:'像放学路上哼的那首歌'}]},
+  {id:'block', no:'011', name:'灵感枯竭', kana:'れいかんこけつ', stars:2, base:587.33,
+   desc:'光标闪了一小时，文档还是只有一个标题，脑子里全是白噪音。',
+   usage:'立刻离开工位，服用一个专辑长度的时间，禁止携带电脑。',
+   side:'灵感大概率会在洗澡时突然出现。',
+   songs:[
+     {t:'One more time, One more chance', a:'山崎まさよし', e:'把心放回原处的时间'},
+     {t:'アイデア', a:'星野源', e:'脑子开始发芽的声音'},
+     {t:'ヒッチコック', a:'ヨルシカ', e:'给枯竭的大脑一点剧情'}]},
+  {id:'low', no:'012', name:'说不出的低落', kana:'いえないふちょう', stars:3, base:164.81,
+   desc:'没有具体的坏事发生，就是开心不起来。连「我没事」都是真的累。',
+   usage:'允许自己低落一整天，明天再按下重播键。本处方无限续笺。',
+   side:'没有副作用，低落本来就是被允许的。',
+   songs:[
+     {t:'夜に駆ける', a:'YOASOBI', e:'低落的夜也会被旋律接住'},
+     {t:'靴の花火', a:'ヨルシカ', e:'转瞬即逝，也认真绽放过'},
+     {t:'カタオモイ', a:'Aimer', e:'被温柔的声音托底的感觉'}]}
+];
+
+const MOODS = {
+  1:{level:1, icon:'☀️', text:'晴 · 今天世界很温柔', rx:['friday'], tip:'把好心情存进处方里，留到阴天用。'},
+  3:{level:3, icon:'☁️', text:'多云 · 需要一点支撑', rx:['overtime','commute'], tip:'按症状选一张，戴上耳机就出发。'},
+  5:{level:5, icon:'⛈️', text:'暴雨 · 立即救治', rx:['low','insomnia'], tip:'连服两剂，哭出来也是服药的一部分。'}
+};
+
+/* ═══════════ 状态 ═══════════ */
+let collected = JSON.parse(localStorage.getItem('oyk_collected') || '[]');
+let currentRx = null;
+
+/* ═══════════ 工具 ═══════════ */
+const $ = s => document.querySelector(s);
+const stars = n => '★'.repeat(n) + `<span class="off">${'★'.repeat(5-n)}</span>`;
+function showToast(msg){
+  const t = $('#toast'); t.textContent = msg; t.classList.add('show');
+  clearTimeout(t._h); t._h = setTimeout(()=>t.classList.remove('show'), 2200);
+}
+
+/* ═══════════ 首页渲染 ═══════════ */
+const TAPES = ['var(--sakura)','var(--sky)','var(--matcha)','var(--amber)','#D8C4E8'];
+function renderList(){
+  const list = $('#symptom-list');
+  list.innerHTML = RX.map((r,i)=>`
+    <div class="symptom-card" style="--tape:${TAPES[i%TAPES.length]};animation-delay:${i*0.05}s">
+      <div class="symptom-top">
+        <div class="symptom-name"><h3>${r.name}</h3><span class="kana">${r.kana}</span></div>
+        <div class="stars">${stars(r.stars)}</div>
+      </div>
+      <p class="symptom-desc">${r.desc}</p>
+      <div class="symptom-foot">
+        <span class="rx-count">处方 ${r.songs.length} 味 · 疗效因人而异</span>
+        <button class="btn-rx ${collected.includes(r.id)?'owned':''}" data-rx="${r.id}">
+          ${collected.includes(r.id)?'✓ 已入药匣':'♪ 领取处方'}
+        </button>
+      </div>
+    </div>`).join('');
+}
+
+/* ═══════════ 今日生存指数 ═══════════ */
+(function initDate(){
+  const d = new Date();
+  const week = '日一二三四五六'[d.getDay()];
+  $('#today-date').textContent = `${d.getFullYear()}年${d.getMonth()+1}月${d.getDate()}日 · 星期${week}`;
+})();
+$('#mood-row').addEventListener('click', e=>{
+  const btn = e.target.closest('.mood-btn'); if(!btn) return;
+  document.querySelectorAll('.mood-btn').forEach(b=>b.classList.remove('selected'));
+  btn.classList.add('selected');
+  const m = MOODS[btn.dataset.mood];
+  $('#diff-level').textContent = `${m.icon} ${m.text}（${m.level}/5）`;
+  document.querySelectorAll('#diff-bar span').forEach((s,i)=>s.classList.toggle('on', i < m.level));
+  currentRx = RX.find(r=>r.id===m.rx[0]);
+  $('#today-rx-btn').textContent = `领取今日处方：「${currentRx.name}」→`;
+  $('#today-rx-tip').textContent = m.tip;
+  $('#today-result').classList.add('show');
+});
+$('#today-rx-btn').addEventListener('click', ()=> openRx(currentRx.id));
+
+/* ═══════════ 处方弹窗 ═══════════ */
+function openRx(id){
+  const r = RX.find(x=>x.id===id); if(!r) return;
+  currentRx = r;
+  stopFx(); resetListenBtn();
+  $('#rx-no').innerHTML = `RX-No.${r.no}<br>2026 · 音药局制`;
+  $('#rx-title').textContent = r.name;
+  $('#rx-kana').textContent = r.kana;
+  $('#rx-symptom').textContent = r.desc;
+  $('#rx-songs').innerHTML = r.songs.map((s,i)=>`
+    <div class="song">
+      <span class="no">${i+1}</span>
+      <span>《${s.t}》<span class="sa">${s.a}</span><span class="se">疗效：${s.e}</span></span>
+    </div>`).join('');
+  $('#rx-usage').textContent = r.usage;
+  $('#rx-side').textContent = r.side;
+  updateCollectBtn();
+  $('#overlay').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+function closeRx(){
+  $('#overlay').classList.remove('open');
+  document.body.style.overflow = '';
+  stopFx(); resetListenBtn();
+  $('#rx-stamp').classList.remove('show');
+}
+function updateCollectBtn(){
+  const owned = collected.includes(currentRx.id);
+  const b = $('#btn-collect');
+  b.classList.toggle('done', owned);
+  b.textContent = owned ? '✓ 已在药匣中' : '放入药匣';
+  $('#rx-stamp').classList.toggle('show', owned);
+}
+$('#rx-close').addEventListener('click', closeRx);
+$('#overlay').addEventListener('click', e=>{ if(e.target === e.currentTarget) closeRx(); });
+document.addEventListener('keydown', e=>{ if(e.key === 'Escape') closeRx(); });
+
+$('#btn-collect').addEventListener('click', ()=>{
+  if(!currentRx) return;
+  if(collected.includes(currentRx.id)){ showToast('这张处方已经在药匣里啦'); return; }
+  collected.push(currentRx.id);
+  localStorage.setItem('oyk_collected', JSON.stringify(collected));
+  markDay();
+  const stamp = $('#rx-stamp');
+  stamp.classList.remove('show'); void stamp.offsetWidth; stamp.classList.add('show');
+  updateCollectBtn(); renderList(); renderBox(); updateBadge();
+  showToast('处方已放入药匣 ♪ 记得按时服用');
+});
+
+/* ═══════════ 药匣 ═══════════ */
+function markDay(){
+  const today = new Date().toISOString().slice(0,10);
+  const days = JSON.parse(localStorage.getItem('oyk_days') || '[]');
+  if(!days.includes(today)){ days.push(today); localStorage.setItem('oyk_days', JSON.stringify(days)); }
+}
+function calcStreak(){
+  const days = new Set(JSON.parse(localStorage.getItem('oyk_days') || '[]'));
+  let streak = 0;
+  const d = new Date();
+  while(days.has(d.toISOString().slice(0,10))){ streak++; d.setDate(d.getDate()-1); }
+  return Math.max(streak, 1);
+}
+function renderBox(){
+  const list = $('#box-list');
+  $('#stat-count').textContent = collected.length;
+  $('#stat-streak').textContent = calcStreak();
+  $('#box-empty').style.display = collected.length ? 'none' : 'block';
+  list.innerHTML = collected.map(id=>{
+    const r = RX.find(x=>x.id===id); if(!r) return '';
+    return `<div class="box-item" data-rx="${id}">
+      <div class="rx-ico">Rx</div>
+      <div class="bi-main"><h4>${r.name}</h4><p>RX-No.${r.no} · 处方 ${r.songs.length} 味</p></div>
+      <span class="arrow">›</span>
+    </div>`;
+  }).join('');
+}
+function updateBadge(){
+  const b = $('#nav-badge');
+  b.textContent = collected.length;
+  b.classList.toggle('show', collected.length > 0);
+}
+
+/* ═══════════ 导航 ═══════════ */
+document.querySelectorAll('.nav-btn').forEach(btn=>{
+  btn.addEventListener('click', ()=>{
+    document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active'));
+    btn.classList.add('active');
+    document.querySelectorAll('.view').forEach(v=>v.classList.remove('active'));
+    $('#view-'+btn.dataset.view).classList.add('active');
+    window.scrollTo({top:0});
+  });
+});
+
+/* 事件委托：卡片按钮 & 药匣条目 */
+document.addEventListener('click', e=>{
+  const rxBtn = e.target.closest('[data-rx]');
+  if(rxBtn && (rxBtn.classList.contains('btn-rx') || rxBtn.classList.contains('box-item'))){
+    openRx(rxBtn.dataset.rx);
+  }
+});
+
+/* ═══════════ 疗效试听（Web Audio 生成音） ═══════════ */
+let audioCtx = null, loopTimer = null, playing = false;
+function playFx(base){
+  stopFx();
+  audioCtx = audioCtx || new (window.AudioContext || window.webkitAudioContext)();
+  const master = audioCtx.createGain(); master.gain.value = 0.16; master.connect(audioCtx.destination);
+  const scale = [0,4,7,12,9,4,7,14]; // 温柔的五声感琶音
+  let i = 0; playing = true;
+  (function note(){
+    if(!playing) return;
+    const f = base * Math.pow(2, scale[i % scale.length] / 12); i++;
+    const t = audioCtx.currentTime;
+    const o = audioCtx.createOscillator(); o.type = 'sine'; o.frequency.value = f;
+    const o2 = audioCtx.createOscillator(); o2.type = 'triangle'; o2.frequency.value = f * 2;
+    const g = audioCtx.createGain();
+    g.gain.setValueAtTime(0, t);
+    g.gain.linearRampToValueAtTime(0.5, t + 0.06);
+    g.gain.exponentialRampToValueAtTime(0.001, t + 1.6);
+    const g2 = audioCtx.createGain(); g2.gain.value = 0.12;
+    o.connect(g); o2.connect(g2); g2.connect(g); g.connect(master);
+    o.start(t); o2.start(t); o.stop(t + 1.7); o2.stop(t + 1.7);
+    loopTimer = setTimeout(note, 560);
+  })();
+}
+function stopFx(){ playing = false; if(loopTimer){ clearTimeout(loopTimer); loopTimer = null; } }
+function resetListenBtn(){
+  const b = $('#btn-listen');
+  b.classList.remove('playing');
+  $('#listen-label').textContent = '♪ 疗效试听';
+}
+$('#btn-listen').addEventListener('click', ()=>{
+  const b = $('#btn-listen');
+  if(playing){ stopFx(); resetListenBtn(); return; }
+  if(currentRx) playFx(currentRx.base);
+  b.classList.add('playing');
+  $('#listen-label').textContent = '停止试听';
+});
+
+/* ═══════════ 启动 ═══════════ */
+renderList(); renderBox(); updateBadge();
+</script>
+</body>
+</html>
